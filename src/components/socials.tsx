@@ -1,0 +1,169 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { site } from "@/config/site";
+import {
+  GitHubIcon,
+  TwitterIcon,
+  LinkedInIcon,
+  MailIcon,
+  ThreadsIcon,
+} from "./icons";
+
+const items = [
+  { key: "github",   href: site.socials.github,   label: "GitHub",   Icon: GitHubIcon },
+  { key: "twitter",  href: site.socials.twitter,  label: "Twitter",  Icon: TwitterIcon },
+  { key: "linkedin", href: site.socials.linkedin, label: "LinkedIn", Icon: LinkedInIcon },
+  { key: "email",    href: site.socials.email,    label: "Mail",     Icon: MailIcon },
+  { key: "threads",  href: site.socials.threads,  label: "Threads",  Icon: ThreadsIcon },
+];
+
+const hoverCardsData: Record<string, {
+  pronouns?: string;
+  handle: string;
+  bio: string;
+  stats?: string[];
+  bannerText: string;
+}> = {
+  github: {
+    handle: "@animatrix01",
+    bio: "Full-Stack Developer & AI Engineer. Building products, automating workflows, and shipping things that matter.",
+    stats: ["Open Source", "Active Builder"],
+    bannerText: "learn • build • ship",
+  },
+  twitter: {
+    handle: "@animatrix01",
+    bio: "Thoughts on full-stack engineering, AI, and building products at the intersection of both.",
+    stats: ["Tech Thoughts", "Dev Updates"],
+    bannerText: "connect • share • grow",
+  },
+  linkedin: {
+    pronouns: "He/Him",
+    handle: "in/thakuranimesh",
+    bio: "Full-Stack Developer & AI Engineer. Open to freelance projects and full-time opportunities.",
+    stats: ["Open to Work", "Jabalpur, India"],
+    bannerText: "network • build • impact",
+  },
+  email: {
+    handle: "hello.animeshh@gmail.com",
+    bio: "Available for freelance projects, collaborations, and full-time opportunities. Fast response guaranteed.",
+    stats: ["Fast Response", "Direct Email"],
+    bannerText: "collab • contact • direct",
+  },
+  threads: {
+    handle: "@thakuranimeshh",
+    bio: "Thoughts on AI, full-stack engineering, and building products at the intersection of both.",
+    stats: ["Dev Updates", "AI × Web"],
+    bannerText: "follow • engage • connect",
+  },
+  resume: {
+    handle: "Curriculum Vitae",
+    bio: "View skills, experience, and project highlights.",
+    stats: ["PDF Resume", "1-Page CV"],
+    bannerText: "skills • experience • cv",
+  },
+};
+
+export function Socials({ className = "" }: { className?: string }) {
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+
+  return (
+    <div className={`flex flex-wrap items-center gap-3.5 ${className}`}>
+      {items
+        .filter((i) => i.href)
+        .map(({ key, href, label, Icon }) => {
+          const card = hoverCardsData[key];
+
+          return (
+            <div
+              key={key}
+              className="relative"
+              onMouseEnter={() => setHoveredKey(key)}
+              onMouseLeave={() => setHoveredKey(null)}
+            >
+              <a
+                href={href}
+                target={href.startsWith("mailto") ? undefined : "_blank"}
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900/60 px-4 py-2 font-mono text-xs text-neutral-300 hover:border-neutral-600 hover:text-white hover:bg-neutral-800/80 active:scale-95 transition-all duration-300 cursor-pointer shadow-sm"
+              >
+                <Icon className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110 text-neutral-400 group-hover:text-white" />
+                <span>{label}</span>
+                <span className="text-[10px] text-neutral-500 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white">↗</span>
+              </a>
+
+              <AnimatePresence>
+                {hoveredKey === key && card && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 12 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 12 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 z-50 w-72 overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/95 shadow-2xl backdrop-blur-xl pointer-events-none select-none"
+                  >
+                    {/* Banner header */}
+                    <div className="relative h-20 w-full overflow-hidden flex items-center justify-center bg-neutral-950">
+                      <img
+                        src={(site as any).socialBannerImage || "/banner.png"}
+                        alt="Banner"
+                        className="absolute inset-0 h-full w-full object-cover object-center"
+                      />
+                      <div className="absolute inset-0 bg-black/40" />
+                      <span className="relative z-10 font-mono text-[9px] uppercase tracking-widest text-white bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-md border border-white/20 shadow-sm">
+                        {card.bannerText}
+                      </span>
+                    </div>
+
+                    {/* Profile body details */}
+                    <div className="relative px-4 pb-4 pt-1">
+                      <div className="absolute -top-6 left-4 h-12 w-12 rounded-full border-2 border-neutral-900 bg-neutral-950 overflow-hidden shadow-md">
+                        <img
+                          src={site.profileImages[0]}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <div className="mt-7">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-white">
+                            {site.name}
+                          </span>
+                          <svg className="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                          </svg>
+                          {card.pronouns && (
+                            <span className="text-[9px] font-mono text-neutral-400 bg-neutral-800 border border-neutral-700 rounded-md px-1.5 py-0.2">
+                              {card.pronouns}
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="text-[10px] font-mono text-neutral-400 mt-0.5">
+                          {card.handle}
+                        </p>
+
+                        <p className="text-[10px] text-neutral-300 leading-relaxed mt-2.5">
+                          {card.bio}
+                        </p>
+
+                        {card.stats && (
+                          <div className="mt-3 flex gap-3 border-t border-neutral-800 pt-2 text-[9px] font-mono text-neutral-400">
+                            {card.stats.map((s, idx) => (
+                              <span key={idx} className="flex items-center gap-1">
+                                <span className="h-1 w-1 rounded-full bg-emerald-400" />
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+    </div>
+  );
+}

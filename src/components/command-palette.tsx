@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { site } from "@/config/site";
 import { useTheme } from "./theme-provider";
+import { useClickSound } from "@/hooks/useClickSound";
 import { 
   Search, 
   Compass, 
@@ -43,6 +44,7 @@ export function CommandPalette({
     if (setIsOpen) setIsOpen(false);
   };
   const { theme, toggleTheme } = useTheme();
+  const playClick = useClickSound();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -130,6 +132,7 @@ export function CommandPalette({
       subtitle: theme === "dark" ? "Go light mode" : "Go dark mode",
       icon: theme === "dark" ? <Sun size={16} /> : <Moon size={16} />,
       action: () => {
+        playClick();
         toggleTheme();
         handleClose();
       },

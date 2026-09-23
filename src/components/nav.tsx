@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Shell } from "@/components/Layout";
 import { site } from "@/config/site";
 import { useTheme } from "./theme-provider";
+import { useClickSound } from "@/hooks/useClickSound";
 import { Sun, Moon, Search, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -12,18 +13,10 @@ export function Nav({ onOpenPalette }: { onOpenPalette?: () => void }) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Pre-create the Audio object once so it's ready instantly on click
-  const clickSound = useRef<HTMLAudioElement | null>(null);
-  if (typeof window !== "undefined" && !clickSound.current) {
-    clickSound.current = new Audio("/click.mp3");
-    clickSound.current.volume = 0.5;
-  }
+  const playClick = useClickSound();
 
   const handleThemeToggle = () => {
-    if (clickSound.current) {
-      clickSound.current.currentTime = 0; // rewind so rapid clicks always play
-      clickSound.current.play().catch(() => { /* autoplay policy — silent fail */ });
-    }
+    playClick();
     toggleTheme();
   };
 
